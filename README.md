@@ -1,5 +1,5 @@
 # Introduction
-`@protocol/nec-display` is Node module to encode and decode NEC displays commands using NEC control protocol for LCD monitors.
+`nec-display-protocol` is Node module to encode and decode NEC displays commands using NEC control protocol for LCD monitors.
 
 ## Main features
 - no external dependencies
@@ -12,7 +12,7 @@
 ## Usage
 
 ```js
-const NECD = require('@protocol/nec-display');
+const NECD = require('nec-display-protocol');
 let socket = net.createConnection(7142, '192.168.4.212', () => {
   let enc = NECD.encode('power on', 1);
   console.log('>', enc)

@@ -1,6 +1,9 @@
 {
-  "name": "@protocol/nec-display",
+  "name": "nec-display-protocol",
   "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "NEC display encoder/decoder based on NEC LCD control protocol",
   "main": "necd.js",
   "scripts": {
@@ -15,17 +18,17 @@
     "encode",
     "decode"
   ],
- "author": {
+  "author": {
     "name": "Mariusz Czernik <mariusz@infotechnika.pl>"
   },
- "repository": {
+  "repository": {
     "type": "git",
-    "url": "https://github.com/magik1969/nec-display-protocol.git"
+    "url": "git+https://github.com/magik1969/nec-display-protocol.git"
   },
-"bugs": {
+  "bugs": {
     "url": "https://github.com/magik1969/nec-display-protocol/issues",
     "email": "control@infotechnika.pl"
   },
-"funding": "https://PayPal.Me/infotechnik",
-"license": "ISC"
+  "funding": "https://PayPal.Me/infotechnik",
+  "license": "MIT"
 }
