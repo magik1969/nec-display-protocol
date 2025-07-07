@@ -1,0 +1,26 @@
+{
+  "name": "@protocol/nec-display",
+  "version": "1.0.0",
+  "description": "NEC display encoder/decoder based on NEC LCD control protocol",
+  "main": "necd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nec",
+    "lcd",
+    "display",
+    "control",
+    "protocol",
+    "encode",
+    "decode"
+  ],
+ "author": {
+    "name": "Mariusz Czernik <mariusz@infotechnika.pl>"
+  },
+"bugs": {
+    "email": "control@infotechnika.pl"
+  },
+"funding": "https://PayPal.Me/infotechnik",
+"license": "ISC"
+}
