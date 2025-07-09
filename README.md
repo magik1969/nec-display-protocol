@@ -13,6 +13,7 @@
 
 ```js
 const NECD = require('nec-display-protocol');
+const net = require('net');
 let socket = net.createConnection(7142, '192.168.4.212', () => {
   let enc = NECD.encode('power on', 1);
   console.log('>', enc)
@@ -40,16 +41,16 @@ socket.on('data', data => {
 # Parameters and commands
 NEC control protocol defines set of parameters and commands.  
 Parameters are used to set or get states of LCD using single value. 
-Parameter syntax is `parameter_name value|?`. 
-Sample parameters are: `input, backlight, volume, spectraView`.
-Parameters are defined in `parameter` array in `data.js` file.  You can also find accepted values here.  
-Commands can be more complex and can accept multiple paremeters or return more complex structures. Command syntax is `command_name[ val1[ val2[...]]]`. 
+Parameter syntax is `parameter_name[?][ value]`. 
+Sample parameters are: `input, backlight, volume, spectraView`. 
+Parameters are defined in `parameters` array in `data.js` file.  You can also find accepted values here.  
+Commands can be more complex and can accept multiple paremeters or return more complex structures. Command syntax is `command_name[ val1[,val2[...]]]`. 
 Sample commands: `power, model, diagnosis`.
 Supported commands are defined in `commands` array in data.js 
 
 ## `encode(cmd, id)` function
 Encodes human friendly command to bytes according to NEC LCD control protocol.  
-- `cmd <string>` - required. The cmd is a human friendly command which corresponds to NEC parameter or command name. For parameters you must provide a value or '?'. Examples: 'power on', 'backlight 30', 'input hdmi', 'input ?', 'sn ?'
+- `cmd <string>` - required. The cmd is a human friendly command which corresponds to NEC parameter or command name. For parameters you must provide a value or '?' directly after the name. Examples: 'power on', 'backlight 30', 'input hdmi', 'input?', 'sn'
 - `id <number|string>` - optional. If not specified, default id 1 will be used. You can also use wildcard id 'ALL'. This affects monitor regardless of its id. It is usefull when you don't know monitor id or you want to control all displays connected with RS232 chain using single command.
 
 Return value is `cmdObj <Object>`. The most important property is `encoded` which contains encoded command as Buffer. This buffer must be send to LCD. Other properties are helper ones.

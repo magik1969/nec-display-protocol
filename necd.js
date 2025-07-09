@@ -32,20 +32,26 @@ function encode(cmd, id = addressDefaults.id){
         command: cmd,
         id: id
     }
-	let res = /^(?<name>\w+)(?: (?<value>[\w?% ]+))?/.exec(cmd);
+	let res = /(?<name>\w+)(?<mode>\?)? ?(?<values>[\w%, ]+)?/.exec(cmd);
 	if(!res){
 		cmdObj['status'] = 'Err'
 		cmdObj['more'] = 'Wrong command format'
 		return cmdObj;
 	}
 	let name = res.groups.name;
-	let value = res.groups.value;
+	let mode = res.groups.mode;
+	let values = res.groups.values;
+	let value;
+	if(typeof values !== 'undefined'){
+		//Only first param to be processed. To be modified in future release.
+		//Some rarely used commands need multiple values
+		value = values.split(',')[0]; 
+	}
 
 	let message, messageType;
-
 	let par = parameters.find(el => el.name.toUpperCase() == name.toUpperCase());
 	if(par){ //parameter
-		if(value == '?'){
+		if(mode == '?'){
 			messageType = 'C' //Get parameter
 			message = `\x02${par.code}\x03`;
 		}
