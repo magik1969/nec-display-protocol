@@ -13,9 +13,10 @@ const serialDefaults = {
 	stopBits: 1
 }
 const optionsDefaults = {
-	encoding: 'ASCII',
-    wDuration: 500,
-	rDuration: 500,
+	encoding: 'latin1',
+    wDuration: 500,	//default duration for set param
+	rDuration: 500,	//default duration for get param
+	xDuration: 500, //default duration for commands
 	splitter: {
 		delimiter: '\r',
 	}
@@ -54,6 +55,7 @@ function encode(cmd, id = addressDefaults.id){
 		if(mode == '?'){
 			messageType = 'C' //Get parameter
 			message = `\x02${par.code}\x03`;
+			cmdObj['duration'] = par.hasOwnProperty('rDuration')? par.rDuration: optionsDefaults.rDuration;
 		}
 		else{
 			messageType = 'E' //Set parameter
@@ -76,28 +78,30 @@ function encode(cmd, id = addressDefaults.id){
 					return cmdObj;
 				}
 			}
-			message = `\x02${par.code}${decimal2Hex(value, 4)}\x03`
+			message = `\x02${par.code}${decimal2Hex(value, 4)}\x03`;
+			cmdObj['duration'] = par.hasOwnProperty('wDuration')? par.wDuration: optionsDefaults.wDuration;
 		}
 	}
 	else{	//command
-		let cmd = commands.find(el=> el.name.toUpperCase() == name.toUpperCase())
-		if(cmd){
+		let command = commands.find(el=> el.name.toUpperCase() == name.toUpperCase())
+		if(command){
 			messageType = 'A' //Command
 			try{
-				let dicVal = cmd.dics.find(el => el[0].toUpperCase() == value.toUpperCase());
+				let dicVal = command.dics.find(el => el[0].toUpperCase() == value.toUpperCase());
 				value = dicVal[1];
 			}
 			catch(err){}
-			if(cmd.msg instanceof Function)
-				message = cmd.msg(value);
+			if(command.msg instanceof Function)
+				message = command.msg(value);
 			else
-				message = cmd.msg;
+				message = command.msg;
 		}
 		else{
 			cmdObj['status'] = 'Err';
 			cmdObj['more'] = `Can't find command`;
 			return cmdObj;
 		}
+		cmdObj['duration'] = command.hasOwnProperty('xDuration')? command.xDuration: optionsDefaults.xDuration;
 	}
 	let header = '\x010';
 	header += encodeID(id);
@@ -129,10 +133,11 @@ function decode(data){
 	response['id'] = decodeID(result.groups.id);
 	let message = result.groups.message;
 	let mtype = result.groups.mtype;
-	let allvals = {}
-	response['allValue'] = allvals;
-	allvals['msgType'] = mtype;
-	allvals['message'] = message;
+	let extra = {}
+	response['extra'] = extra;
+	response['allValue'] = extra; //legacy, for compatibility
+	extra['msgType'] = mtype;
+	extra['message'] = message;
 	if(mtype == 'B'){ //command reply
 		let cmd = commands.find(el => {
 			let pat = el.replypatt? el.replypatt: /undefined/
@@ -141,12 +146,12 @@ function decode(data){
 		if(cmd){ //command found
 			let res = cmd.replypatt.exec(message);
 			let val = res[1];
-			allvals['strValue'] = val;
+			extra['strValue'] = val;
 			if(cmd.valDecode)	// use value decoding function
 				val = cmd.valDecode(val);
 			else{	// value is a number
 				val = parseInt(val, 16);
-				allvals['numValue'] = val;
+				extra['numValue'] = val;
 			}
 			response['value'] = val;
 			// try use a dictionary for value
@@ -159,16 +164,16 @@ function decode(data){
 	}
 	else if((mtype == 'D') || (mtype == 'F')){ //GET_PARAMETER_REPLY, SET_PARAMETER_REPLY
 		let res = /(?<result>[A-Fa-f0-9]{2})(?<OP>[A-Fa-f0-9]{4})(?<type>[A-Fa-f0-9]{2})(?<max>[A-Fa-f0-9]{4})(?<value>[A-Fa-f0-9]{4})/.exec(message);
-		allvals['result'] = res.groups.result;
-		allvals['strValue'] = res.groups.value;
+		extra['result'] = res.groups.result;
+		extra['strValue'] = res.groups.value;
 		let val = parseInt(res.groups.value, 16); 
-		allvals['numValue'] = val; 
-		response['value'] = allvals.numValue;
+		extra['numValue'] = val; 
+		response['value'] = extra.numValue;
 		let opcode = res.groups.OP
-		allvals['OP'] = opcode;
+		extra['OP'] = opcode;
 		response['req'] = opcode;
-		allvals['type'] = res.groups.type;
-		allvals['max'] = res.groups.max;
+		extra['type'] = res.groups.type;
+		extra['max'] = res.groups.max;
 		let param = parameters.find(el => el.code == opcode)
 		if(param){ //parameter found
 			response['req'] = param.name;

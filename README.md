@@ -65,6 +65,6 @@ Returns `response <Object|Null>` - an response object containing properties:
 - `id <number>` - monitor id
 - `req <string>` - a parameter or command name (request) 
 - `value <string|number>` - decoded value. Return type depends on command
-- `allValue <Object>` - some pre-decoded values, specific for NEC control protocol.
+- `extra <Object>` - some pre-decoded values, specific for NEC control protocol.
 
 The function does not control completeness of data. It verifies if `data` is a valid protocol response and tries to decode it. If data is not a valid response, a null is returned.

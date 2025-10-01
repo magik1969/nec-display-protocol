@@ -1,6 +1,6 @@
 const parameters =[
     //  Set/get active input. Argument: input_name or input_value. Returns selected input name. Examples: 'input DVI', 'input ?'
-    {name: 'input', code: '0060', wDuration: 10000, dic:[
+    {name: 'input', code: '0060', wDuration: 7000, dic:[
         ['VGA', 1],
         ['RGBHV', 2],
         ['DVI', 3],
@@ -70,7 +70,7 @@ const parameters =[
 ]
 
 const commands = [
-    {name: 'power', wDuration: 15000, 
+    {name: 'power', xDuration: 10000, 
         dics:[
         ['on', 1],
         ['off', 4]],
