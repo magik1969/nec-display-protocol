@@ -27,6 +27,7 @@ socket.on('data', data => {
 > {
   command: 'power on',
   id: 1,
+  duration: 10000,
   encodedStr: '\x010A0A0C\x02C203D60001\x03s\r',
   encoded: <Buffer 01 30 41 30 41 30 43 02 43 32 30 33 44 36 30 30 30 31 03 73 0d>
 }
@@ -34,7 +35,14 @@ socket.on('data', data => {
   raw: <Buffer 01 30 30 41 42 30 45 02 30 30 43 32 30 33 44 36 30 30 30 31 03 76 0d>,
   rawStr: '\x0100AB0E\x0200C203D60001\x03v\r',
   id: 1,
-  allValue: { msgType: 'B', message: '00C203D60001' }
+  extra: {
+    msgType: 'B',
+    message: '00C203D60001',
+    strValue: '0001',
+    numValue: 1
+  },
+  req: 'power',
+  value: 'on'
 }
 */
 ```

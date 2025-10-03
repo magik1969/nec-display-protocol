@@ -70,12 +70,11 @@ const parameters =[
 ]
 
 const commands = [
-    {name: 'power', xDuration: 10000, mode: 'w',
+    {name: 'power', xDuration: 10000, mode: 'w', replypatt: /00C203D6(\d{4})/,
         dics:[
         ['on', 1],
         ['off', 4]],
         msg: function(par=null){return `\x02C203D6000${par.toString()}\x03`},
-        //replypatt: /00C203D6(\d{4})/
     },
     {name: 'powerStatus', mode: 'r', msg: '\x0201D6\x03', replypatt: /02\d{2}D6000004(\d{4})/, dics: [
         ['on', 1],

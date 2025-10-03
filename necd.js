@@ -1,7 +1,7 @@
 const {parameters, commands} = require('./data');
 const addressDefaults = {
     id: 1,
-	wildcard_id: 'ALL', //-22
+	wildcard_id: 'ALL',
 }
 const tcpDefaults = {
 	port: 7142
@@ -135,7 +135,7 @@ function decode(data){
 	let mtype = result.groups.mtype;
 	let extra = {}
 	response['extra'] = extra;
-	response['allValue'] = extra; //legacy, for compatibility
+	//response['allValue'] = extra; //legacy, for compatibility
 	extra['msgType'] = mtype;
 	extra['message'] = message;
 	if(mtype == 'B'){ //command reply
@@ -144,6 +144,7 @@ function decode(data){
 			return pat.test(message)
 		})
 		if(cmd){ //command found
+			response['req'] = cmd.name;
 			let res = cmd.replypatt.exec(message);
 			let val = res[1];
 			extra['strValue'] = val;

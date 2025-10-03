@@ -1,3 +1,7 @@
+## 2.2.0/25-10-03
+- test script
+- fixed missing req property in decode() for commands
+- property allValue removed, use extra
 ## 2.1.0/2025-10-01
 - duration support
 - legacy ascii encoding -> latin1
